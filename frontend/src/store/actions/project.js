@@ -1,10 +1,14 @@
 import * as actionTypes from './actionTypes';
 import axios from '../../axios-orders';
 
-export const setProjectTodos = (todos) => {
+export const setProjectTodos = (project_todos) => {
+
+    const project = {id: project_todos.id, name: project_todos.name, description: project_todos.description};
+
     return {
         type: actionTypes.PROJECT_TODOS,
-        todos: todos
+        project: project,
+        todos: project_todos.tasks
     }
 }
 
@@ -15,22 +19,22 @@ export const setprojectResources = (resources) => {
     }
 }
 
-export const projectTodos = () => {
+export const projectTodos = (id) => {
     return dispatch => {
-        // axios.get('/projects.json')
-		// .then(response => {
-		// 	dispatch(setProjects(response.data));
-		// })
-        // .catch(error => {
-        //     console.log(error);
-        // })
+        axios.get('/projects/' + id)
+		.then(response => {
+			dispatch(setProjectTodos(response.data.data));
+		})
+        .catch(error => {
+            console.log(error);
+        })
 
-        const todos = [
-            {id: 1, name: 'Task1', description: 'Project1', status: 'done' },
-            {id: 2, name: 'Task2', description: 'Project2', status: 'done'},
-            {id: 3, name: 'Task3', description: 'Project3', status: 'done' }
-          ]
-          dispatch(setProjectTodos(todos));
+        // const todos = [
+        //     {id: 1, name: 'Task1', description: 'Project1', status: 'done' },
+        //     {id: 2, name: 'Task2', description: 'Project2', status: 'done'},
+        //     {id: 3, name: 'Task3', description: 'Project3', status: 'done' }
+        //   ]
+        //   dispatch(setProjectTodos(todos));
 
 
         const resources = [
@@ -41,5 +45,7 @@ export const projectTodos = () => {
         dispatch(setprojectResources(resources));
     }
 }
+
+
 
 

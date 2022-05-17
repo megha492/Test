@@ -7,7 +7,11 @@ export {
     } from './auth';
 
 export {
-    initProjects
+    initProjects,
+    createProject,
+    deleteProject,
+    saveProject,
+    updateProject
     } from './projects';
 
 export {

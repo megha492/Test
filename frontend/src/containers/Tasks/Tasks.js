@@ -2,42 +2,48 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { Table, Button, Alert } from 'reactstrap';
+import { Dropdown, Table, Label, Input, Button, Alert } from 'reactstrap';
 import classes from './Tasks.module.css';
 
 import CustomModal from '../../components/UI/Modal/Modal';
 import CustomAlert from '../../components/UI/Alert/Alert';
+import TaskSearch from '../../components/Task/Search';
 import axios from '../../axios-orders';
 import * as actions from '../../store/actions/index';
 
 class Tasks extends Component {
     state = {
         message: null,
-        modal: false
+        modal: false,
+        inputValue: ''
     }
 
   componentDidMount() {
       this.props.onInitTasks();
   }
 
-  deleteHandler = (id) => {
-    this.toggle();
-    this.setState({message: 'Deleted successfully'});
+  updateInputValue = (evt, id) => {
+    // let tathis.props.tasks.filter(id)
+    let prevTask = this.props.tasks.filter( function (task) {
+      console.log(task.id);
+      console.log(task.id == id);
+      return task.id == id
+    });
+    alert(this.props.tasks);
+    alert(prevTask.id);
+    alert(prevTask.status);
+    alert(prevTask.newStatus);
+    prevTask.newStatus = evt.target.value
+    alert(prevTask);
   }
-  
-  toggle = () => {
-		this.setState(prevState => ({
-      modal: !prevState.modal
-    }));
-	}
 
   
 render(){
 
-    if(!this.props.isAuthenticated){
-      let redirect = <Redirect to="/login" />
-      return(redirect);
-    }
+    // if(!this.props.isAuthenticated){
+    //   let redirect = <Redirect to="/login" />
+    //   return(redirect);
+    // }
 		  
 
     let projectRows = null;
@@ -55,9 +61,15 @@ render(){
             <th scope="row">{taskObject.id}</th>
             <td>{taskObject.name}</td>
             <td>{taskObject.description}</td>
+            <td>{taskObject.name}</td>
+            <td>{taskObject.status}{taskObject.newStatus ? taskObject.newStatus : '' }</td>
             <td>
-            <Button color="success" size="sm" onClick={() => this.editHandler(taskObject.id)}>Update Status</Button> {' '}
-            <Button color="danger" size="sm" onClick={() => this.toggle()}>Delete</Button> 
+            <Input type="select" id="status" value={this.state.inputValue} onChange={(event) => this.updateInputValue(event, taskObject.id)} style={{Width: 'fit-content !important'}}>
+              <option>Open</option>
+              <option>InProgress</option>
+              <option>Done</option>
+            </Input>
+            <Button color="success" size="sm" onClick={() => this.updateStatus(taskObject.id, taskObject.newStatus)}>Update Status</Button> {' '}
             </td>
           </tr>) 
         })
@@ -67,6 +79,7 @@ render(){
 
     return (
           <div className={classes.Container}>
+           <TaskSearch />
            <CustomModal isOpen={this.state.modal} toggle={this.toggle} 
           title= "Delete Task" body="Are you sure you want to delete?"
           submitHandler = {this.deleteHandler} submit="CONTINUE" cancel="CANCEL"/>
@@ -78,6 +91,8 @@ render(){
                 <tr>
                   <th>#</th>
                   <th>Task Name</th>
+                  <th>Task Description</th>
+                  <th>Project Name</th>
                   <th>Status</th>
                   <th colSpan="3">Actions</th>
                 </tr>

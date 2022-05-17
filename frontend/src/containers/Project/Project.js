@@ -11,18 +11,35 @@ import NewTask from './Todo/NewTask';
 import AddTaskResource from './Todo/AddResource';
 import AddProjectResource from './AddResource';
 
+import CustomModal from '../../components/UI/Modal/Modal';
+
 class Project extends Component {
 
     state = {
         projectName: null,
         todos: null,
-        full_path: null
+        full_path: null,
+        modal: false,
+        mTitle: null,
+        mBody: null
     }
 
+  deleteHandler = (id) => {
+    this.setState({mTitle: 'Delete Project',mBody: 'Are you sure you want to delete?'});
+    this.toggle();
+  }
+  
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal
+    }));
+  }
+
 	componentDidMount(){
+    const projectId = this.props.match.params.projectId;
     this.setState({full_path: this.props.history.location.pathname})
-    this.setState({projectName: this.props.match.params.projectId, full_path: this.props.history.location.pathname})
-    this.props.onInitProject();
+    this.setState({projectName: projectId, full_path: this.props.history.location.pathname})
+    this.props.onInitProject(projectId);
   }
   
   cancelHandler = () => {
@@ -65,7 +82,7 @@ class Project extends Component {
                     <td>
                     <Button color="success" size="sm" onClick={() => this.assignResource()} >Assign</Button>{' '} 
                     <Button color="info" size="sm" >Edit</Button>{' '} 
-                    <Button color="danger" size="sm" >Delete</Button>{' '} 
+                    <Button color="danger" size="sm" onClick={() => this.toggle()}>Delete</Button>{' '} 
                     </td>
                   </tr>) 
                 })
@@ -89,26 +106,19 @@ class Project extends Component {
            )
       }
         
-        let project = 'Project ' + this.state.projectName;
 
         return (<Aux>
               <h3 align="center"> 
-              {project}  
+              {this.props.project ? (this.props.project.name + "\n" + this.props.project.description) : null}  
               </h3>
-              <Switch>
               <Route 
                   path= {this.props.match.path + '/new-todo'} exact
                   component={NewTask}>
               </Route> 
-              <Route 
-                  path={this.props.match.path + '/assign-resource'} exact
-                  component={AddTaskResource}>
-              </Route> 
-              <Route 
-                  path={this.props.match.path + '/add-resource'} exact
-                  component={AddProjectResource}>
-              </Route>
-              </Switch> 
+              <CustomModal isOpen={this.state.modal} toggle={this.toggle} 
+          title= {this.state.mTitle} body= {this.state.mBody}
+          submitHandler = {this.deleteHandler} submit="CONTINUE" cancel="CANCEL"/>
+
               <div align="right">
                 <Button color="info" size="sm" onClick={() => this.createNewTask()} >Create New Task</Button>{' '} 
                 <Button color="info" size="sm" onClick={() => this.addResource()}>Add New Resource</Button>{' '} 
@@ -150,6 +160,7 @@ class Project extends Component {
 const mapStatetoProps = state => {
 		return {
       isAuthenticated: state.auth.token !== null,
+      project: state.projectReducer.project,
       todos: state.projectReducer.todos,
       resources: state.projectReducer.resources
 		}
@@ -157,7 +168,7 @@ const mapStatetoProps = state => {
 
 const mapDispatchtoProps = dispatch => {
 	return{
-    onInitProject: () => dispatch(actions.projectTodos())
+    onInitProject: (projectId) => dispatch(actions.projectTodos(projectId))
 	}
 }
 	

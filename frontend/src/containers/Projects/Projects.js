@@ -34,12 +34,24 @@ class Projects extends Component {
 		this.props.history.push({pathname: '/projects/' + id + '/edit'});
   }
   
-  deleteHandler = (id) => {
+  deleteHandler = () => {
     this.toggle();
-    this.setState({message: 'Deleted successfully'});
+    this.props.onDeleteProject(this.state.id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+     this.setState({
+         projects: nextProps.projects, 
+         message: nextProps.message
+     })
+  }
+
+  deleteConfirm = (id) => {
+    this.setState({id: id})
+    this.toggle();
   }
   
-  toggle = () => {
+  toggle = (event) => {
 		this.setState(prevState => ({
       modal: !prevState.modal
     }));
@@ -71,7 +83,7 @@ class Projects extends Component {
             <td>
             <Button color="primary" size="sm" onClick={() => this.showHandler(projectObject.id)}>Show</Button>{' '} 
             <Button color="success" size="sm" onClick={() => this.editHandler(projectObject.id)}>Edit</Button> {' '}
-            <Button color="danger" size="sm" onClick={() => this.toggle()}>Delete</Button> 
+            <Button color="danger" size="sm" onClick={() => this.deleteConfirm(projectObject.id)}>Delete</Button> 
             </td>
           </tr>) 
         })
@@ -118,13 +130,16 @@ class Projects extends Component {
 const mapStatetoProps = state => {
 		return {
       isAuthenticated: state.auth.token !== null,
-      projects: state.projectsReducer.projects
+      projects: state.projectsReducer.projects,
+      message: state.projectsReducer.message
 		}
 }
 
 const mapDispatchtoProps = dispatch => {
 	return{
-    onInitProjects: () => dispatch(actions.initProjects())
+    onInitProjects: () => dispatch(actions.initProjects()),
+    onDeleteProject: (projectId) => dispatch(actions.deleteProject(projectId)),
+    saveProject: (projectId) => dispatch(actions.saveProject(projectId))
 	}
 }
 	

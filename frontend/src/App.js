@@ -20,11 +20,12 @@ class App extends Component {
               <Route path="/login" component={Auth} /> 
               <Route path="/logout" component={Logout} /> 
               <Route exact path="/" > 
-            <Redirect to= "/login" />
-            </Route>
+                <Redirect to= "/login" />
+              </Route>
+            <Route path={'/highchart'} exact component={HighchartTest} />
           </Switch>)
 
-      if (this.props.isAuthenticated){
+      // if (this.props.isAuthenticated){
         routes = (<Switch>
           <Route path="/login" component={Auth} /> 
           <Route path="/logout" component={Logout} /> 
@@ -38,10 +39,10 @@ class App extends Component {
           <Route path="/projects/:projectId/edit" exact component={EditProject} />
           <Route path="/projects/:projectId/new-todo" exact component={NewTask} />
           <Route path={`/projects/:projectId(\\d+)`} exact component={Project} />
-          <Route path={'/highchart'} exact component={HighchartTest} />
+          
           {/* <Route path="/projects/:projectId/add-resource"  exact component={AddResource} /> */}
           </Switch>)
-      }
+      // }
 
       return (
         <div>

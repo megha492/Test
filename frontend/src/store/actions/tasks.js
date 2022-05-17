@@ -11,19 +11,19 @@ export const setTasks = (tasks) => {
 export const initTasks = () => {
     console.log('COming in the initTasks');
     return dispatch => {
-        // axios.get('/projects.json')
-		// .then(response => {
-		// 	dispatch(setProjects(response.data));
-		// })
-        // .catch(error => {
-        //     console.log(error);
-        // })
+        axios.get('/tasks')
+		.then(response => {
+			dispatch(setTasks(response.data.data));
+		})
+        .catch(error => {
+            console.log(error);
+        })
 
-        const tasks = [
-            {id: 1, name: 'Task1', description: 'Project1' },
-            {id: 2, name: 'Task2', description: 'Project2' },
-            {id: 3, name: 'Task3', description: 'Project3' }
-          ]
-          dispatch(setTasks(tasks));
+        // const tasks = [
+        //     {id: 1, name: 'Task1', description: 'Project1' },
+        //     {id: 2, name: 'Task2', description: 'Project2' },
+        //     {id: 3, name: 'Task3', description: 'Project3' }
+        //   ]
+        //   dispatch(setTasks(tasks));
     }
 }

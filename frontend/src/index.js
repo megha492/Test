@@ -12,6 +12,7 @@ import authReducer from './store/reducers/auth';
 import * as reducers from './store/reducers/index';
 import projectReducer from './store/reducers/project';
 import thunk from 'redux-thunk';
+import { reduxTokenAuthReducer } from 'redux-token-auth'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
         auth: authReducer,
         projectsReducer: reducers.projectsReducer,
         tasksReducer: reducers.tasksReducer,
+        reduxTokenAuth: reduxTokenAuthReducer,
         projectReducer: projectReducer
 });
 

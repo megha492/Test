@@ -10,21 +10,46 @@ class HighChartTest extends Component {
         config: {
             chart: {
                 renderTo: 'container',
-                type: 'bar'
+                type: 'pie'
             },
-            series: [{
-                name: 'Jane',
-                data: [1, 0, 4]
-            }]
-        }
+            title: {
+                text: 'Project Status'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: null
+        },
+        projectStatus: [
+            {name: 'Project1',y: 20},
+            {name: 'Project2',y: 20},
+            {name: 'Project2',y: 60}
+        ]
+        
     }
 
 	componentDidMount(){
-        // let chart = this.refs.chart.getChart();
-        // chart.series[0].addPoint({x: 10, y: 12});
+        let newConfig = this.state.config;
+        let projectStatus = this.state.projectStatus;
+        newConfig.series = [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: projectStatus
+        }]
+        this.setState({config : newConfig})
 	}
 	render(){
-        return (<ReactHighcharts config= {this.state.config} ref="chart"></ReactHighcharts>);
+        return (<HighChartTest />);
 	}
 
 }

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import { Redirect } from 'react-router-dom';
+import { registerUser } from '../../redux-token-auth-config'
 
 class Auth extends Component {
 
@@ -99,11 +100,19 @@ class Auth extends Component {
 			formData[formIdentifier] = this.state.orderForm[formIdentifier].value;
 		}
 
-        this.props.onAuth(
-            this.state.controls.email.value,
-            this.state.controls.password.value,
-            this.state.isSignup
-        )
+        let user = { email: this.state.controls.email.value, password: this.state.controls.password.value, isSignup: this.state.isSignup }
+        this.props.onAuth(user, user.password, user.isSignup)
+        // this.props.registerUser(user.email, user.password)
+        this.props.onRegisterUser(user.email, user.password, user.password)
+        console.log('coming',user.email);
+        // this.registerUser(user).then((response) => {
+        // })
+        // .then(result => {
+        //         console.log('coming in success')
+        //         console.log(result);
+        //     }, error => {
+        //         console.log('coming in here');
+        //     });
     }
 
     switchAuthModeHandler = () => {
@@ -174,15 +183,19 @@ const mapStatetoProps = state => {
         loading: state.auth.loading,
         error: state.auth.error,
         isAuthenticated: state.auth.token !== null,
+        // isAuthenticated: true,
         authRedirectPath: state.auth.authRedirectPath
     }
 }
 
 const mapDispatchtoProps = dispatch => {
 	return{
-		onAuth: (email,password, isSignup) => dispatch(actions.authenticate(email,password, isSignup)),
+        onAuth: (email,password, isSignup) => dispatch(actions.authenticate(email,password, isSignup)),
+		onRegisterUser: (email,password, password_confirmation) => dispatch(registerUser({email: email,password: password, password_confirmation: password})),
 		onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/projects')),
 	}
 }
+
+
 
 export default connect(mapStatetoProps, mapDispatchtoProps)(Auth);

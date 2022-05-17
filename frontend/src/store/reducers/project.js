@@ -11,7 +11,13 @@ const projectReducer = (state = initialState, action) => {
                     return {
                         ...state,
                         todos: action.todos,
+                        project: action.project,
                         error: false
+                        }
+                case actionTypes.PROJECT_CREATION_SUCCESS:
+                    return {
+                        ...state,
+                        success: true
                         }
                 case actionTypes.PROJECT_RESOURCES:
                     return {

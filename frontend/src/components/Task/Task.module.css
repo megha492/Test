@@ -1,0 +1,12 @@
+.Search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Search img {
+	max-height: 40px;
+    max-width: 60px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
