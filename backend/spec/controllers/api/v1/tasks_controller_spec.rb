@@ -2,6 +2,15 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::TasksController, type: :controller do
 
+  before do
+    @user = FactoryGirl.create(:user)
+    login(@user)
+  end
+
+  after do
+    sign_out(@user)
+  end
+
   describe "GET #index" do
     it "returns a success response" do
       project = FactoryGirl.create(:project)
